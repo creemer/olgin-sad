@@ -1,24 +1,25 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, {useContext} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
+import {AppContext} from '../App';
 
 const products = [
-    { name: 'Product 1', desc: 'A nice thing', price: '$9.99' },
-    { name: 'Product 2', desc: 'Another thing', price: '$3.45' },
-    { name: 'Product 3', desc: 'Something else', price: '$6.51' },
-    { name: 'Product 4', desc: 'Best thing of all', price: '$14.11' },
-    { name: 'Shipping', desc: '', price: 'Free' },
+    {name: 'Product 1', desc: 'A nice thing', price: '$9.99'},
+    {name: 'Product 2', desc: 'Another thing', price: '$3.45'},
+    {name: 'Product 3', desc: 'Something else', price: '$6.51'},
+    {name: 'Product 4', desc: 'Best thing of all', price: '$14.11'},
+    {name: 'Shipping', desc: '', price: 'Free'},
 ];
 const addresses = ['1 Material-UI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
 const payments = [
-    { name: 'Card type', detail: 'Visa' },
-    { name: 'Card holder', detail: 'Mr John Smith' },
-    { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-    { name: 'Expiry date', detail: '04/2024' },
+    {name: 'Card type', detail: 'Visa'},
+    {name: 'Card holder', detail: 'Mr John Smith'},
+    {name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234'},
+    {name: 'Expiry date', detail: '04/2024'},
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -35,50 +36,42 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Review() {
     const classes = useStyles();
+    const {summaryPrice, cart, client} = useContext(AppContext)
 
     return (
         <React.Fragment>
             <Typography variant="h6" gutterBottom>
-                Order summary
+                Ваш заказ
             </Typography>
             <List disablePadding>
-                {products.map((product) => (
-                    <ListItem className={classes.listItem} key={product.name}>
-                        <ListItemText primary={product.name} secondary={product.desc} />
+                {cart.map((product) => (
+                    <ListItem className={classes.listItem} key={product.id}>
+                        <ListItemText primary={product.id} secondary={product.description}/>
                         <Typography variant="body2">{product.price}</Typography>
                     </ListItem>
                 ))}
                 <ListItem className={classes.listItem}>
-                    <ListItemText primary="Total" />
+                    <ListItemText primary="Итого"/>
                     <Typography variant="subtitle1" className={classes.total}>
-                        $34.06
+                        {summaryPrice} RUB
                     </Typography>
                 </ListItem>
             </List>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                     <Typography variant="h6" gutterBottom className={classes.title}>
-                        Shipping
+                        Доставка
                     </Typography>
-                    <Typography gutterBottom>John Smith</Typography>
-                    <Typography gutterBottom>{addresses.join(', ')}</Typography>
+                    <Typography gutterBottom>{client.fullName}</Typography>
+                    <Typography gutterBottom>{client.phone}</Typography>
+                    <Typography gutterBottom>{client.address}</Typography>
                 </Grid>
                 <Grid item container direction="column" xs={12} sm={6}>
                     <Typography variant="h6" gutterBottom className={classes.title}>
-                        Payment details
+                        Оплата
                     </Typography>
-                    <Grid container>
-                        {payments.map((payment) => (
-                            <React.Fragment key={payment.name}>
-                                <Grid item xs={6}>
-                                    <Typography gutterBottom>{payment.name}</Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography gutterBottom>{payment.detail}</Typography>
-                                </Grid>
-                            </React.Fragment>
-                        ))}
-                    </Grid>
+                    <Typography gutterBottom>{client.paymentMethod}</Typography>
+                    <Typography gutterBottom>{client.shippingMethod}</Typography>
                 </Grid>
             </Grid>
         </React.Fragment>

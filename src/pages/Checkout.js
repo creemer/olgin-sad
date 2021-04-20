@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Stepper from '@material-ui/core/Stepper';
@@ -7,8 +7,9 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AddressForm from '../components/AddressForm';
-import PaymentForm from '../components/PaymentForm';
 import Review from '../components/Review';
+import {useRedirect} from '../hooks/redirect.hook';
+import {AppContext} from '../App';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -47,15 +48,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
+const steps = ['Доставка / оплата', 'Ваш заказ'];
 
 function getStepContent(step) {
     switch (step) {
         case 0:
             return <AddressForm/>;
         case 1:
-            return <PaymentForm/>;
-        case 2:
             return <Review/>;
         default:
             throw new Error('Unknown step');
@@ -65,12 +64,18 @@ function getStepContent(step) {
 export default function Checkout() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
+    const [redirectTo] = useRedirect();
+    const { clientFilled } = useContext(AppContext);
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
     };
 
     const handleBack = () => {
+        if (activeStep === 0) {
+            redirectTo('/cart');
+            return;
+        }
         setActiveStep(activeStep - 1);
     };
 
@@ -78,7 +83,7 @@ export default function Checkout() {
         <main className={classes.layout}>
             <Paper className={classes.paper}>
                 <Typography component="h1" variant="h4" align="center">
-                    Checkout
+                    Оформление заказа
                 </Typography>
                 <Stepper activeStep={activeStep} className={classes.stepper}>
                     {steps.map((label) => (
@@ -91,29 +96,29 @@ export default function Checkout() {
                     {activeStep === steps.length ? (
                         <React.Fragment>
                             <Typography variant="h5" gutterBottom>
-                                Thank you for your order.
+                                Благодарю за Ваш заказ.
                             </Typography>
                             <Typography variant="subtitle1">
-                                Your order number is #2001539. We have emailed your order confirmation, and will
-                                send you an update when your order has shipped.
+                                Ваш заказ подтвержден. Номер Вашего заказа #2001539.
+                                Подтверждение заказа отправлено на указанную Вами почту.
+                                В ближайшее время, я свяжусь с Вами для подтверждения заказа.
                             </Typography>
                         </React.Fragment>
                     ) : (
                         <React.Fragment>
                             {getStepContent(activeStep)}
                             <div className={classes.buttons}>
-                                {activeStep !== 0 && (
-                                    <Button onClick={handleBack} className={classes.button}>
-                                        Back
-                                    </Button>
-                                )}
+                                <Button onClick={handleBack} className={classes.button}>
+                                    Назад
+                                </Button>
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     onClick={handleNext}
                                     className={classes.button}
+                                    disabled={activeStep === 0 && !clientFilled}
                                 >
-                                    {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                                    {activeStep === steps.length - 1 ? 'Разместить заказ' : 'Дальше'}
                                 </Button>
                             </div>
                         </React.Fragment>
