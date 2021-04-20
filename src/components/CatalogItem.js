@@ -65,7 +65,10 @@ const CatalogItem = ({card}) => {
 
         addToCart({
             id: Date.now(),
-            count: count
+            count: count,
+            description: `Some item`,
+            price: Math.round(Math.random() * 100),
+            imageUrl: "https://source.unsplash.com/random"
         })
         setCountingInProcess(false);
     }

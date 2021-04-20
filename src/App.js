@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         minHeight: '100vh',
     },
+    mainContainer: {
+        minHeight: 'calc(100vh - 250px)'
+    },
     footer: {
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
@@ -39,20 +42,22 @@ const App = () => {
                 <div className={classes.root}>
                     <CssBaseline/>
                     <NavigationBar/>
-                    <Switch>
-                        <Route exact path="/">
-                            <Main/>
-                        </Route>
-                        <Route path="/catalog">
-                            <Catalog/>
-                        </Route>
-                        <Route path="/cart">
-                            <Cart/>
-                        </Route>
-                        <Route path="/checkout">
-                            <Checkout />
-                        </Route>
-                    </Switch>
+                    <main className={classes.mainContainer}>
+                        <Switch>
+                            <Route exact path="/">
+                                <Main/>
+                            </Route>
+                            <Route path="/catalog">
+                                <Catalog/>
+                            </Route>
+                            <Route path="/cart">
+                                <Cart/>
+                            </Route>
+                            <Route path="/checkout">
+                                <Checkout />
+                            </Route>
+                        </Switch>
+                    </main>
                     {/* Footer */}
                     <footer className={classes.footer}>
                         <Typography variant="h6" align="center" gutterBottom>
