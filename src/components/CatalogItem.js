@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import ClearIcon from '@material-ui/icons/Clear';
 import IconButton from '@material-ui/core/IconButton';
+import {AppContext} from '../App';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CatalogItem = ({card}) => {
+    const { addToCart } = React.useContext(AppContext);
     const [count, setCount] = useState(1);
     const [countingInProcess, setCountingInProcess] = useState(false)
     const classes = useStyles();
@@ -60,6 +62,11 @@ const CatalogItem = ({card}) => {
     const handleAddToCart = () => {
         // adding to cart logic will be here
         console.log('Adding to cart...', count, 'items');
+
+        addToCart({
+            id: Date.now(),
+            count: count
+        })
         setCountingInProcess(false);
     }
 
