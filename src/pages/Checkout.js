@@ -125,7 +125,6 @@ export default function Checkout() {
                     )}
                 </React.Fragment>
             </Paper>
-            <Copyright/>
         </main>
     );
 }
